@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Begotten III Loading Screen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: black; margin: 0; padding: 0; overflow: hidden;">
+    <audio id="bgm" autoplay loop>
+        <source src="music/caretaker.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div id="video_overlays">
+        <video autoplay loop muted playsinline poster="images/standby.png" id="video_box">
+            <source src="edgecast.mp4" type="video/mp4">
+        </video>
+        <img src="images/tvoverlay2.png" alt="TV Overlay">
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var audio = document.getElementById("bgm");
+            if (audio) {
+                audio.volume = 0.5;
+                var playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(function(err) {
+                        console.log("Autoplay kısıtlandı (etkileşim bekleniyor):", err);
+                        var startAudio = function() {
+                            audio.play();
+                            document.removeEventListener("click", startAudio);
+                            document.removeEventListener("keydown", startAudio);
+                        };
+                        document.addEventListener("click", startAudio);
+                        document.addEventListener("keydown", startAudio);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
